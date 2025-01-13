@@ -547,17 +547,24 @@ function sortByAsc(arr) {
   const array = arr;
   for (let i = 1; i < array.length; i += 1) {
     const temp = array[i];
-    let j = i - 1;
+    let right = i - 1;
+    let left = 0;
 
-    while (j >= 0 && array[j] > temp) {
-      array[j + 1] = array[j];
-      j -= 1;
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      if (array[mid] > temp) {
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
     }
 
-    array[j + 1] = temp;
-  }
+    for (let j = i; j > left; j -= 1) {
+      array[j] = array[j - 1];
+    }
 
-  return array;
+    array[left] = temp;
+  }
 }
 
 /**
@@ -579,7 +586,7 @@ function sortByAsc(arr) {
  */
 function shuffleChar(str, iterations) {
   let string = str;
-  for (let n = 1; n <= iterations; n += 1) {
+  for (let n = 0; n < iterations; n += 1) {
     let even = '';
     let odd = '';
     for (let i = 0; i < string.length; i += 1) {
@@ -590,6 +597,9 @@ function shuffleChar(str, iterations) {
       }
     }
     string = even + odd;
+    if (string === str) {
+      return shuffleChar(str, iterations % (n + 1));
+    }
   }
   return string;
 }
